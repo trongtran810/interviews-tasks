@@ -15,7 +15,7 @@ def get_current_location():
 # Remove the old db file, create new db file
 absolute_db_path = get_current_location() + "\\" + DB_PATH
 
-QUERY_SOL1 = f"""
+QUERY_SOLUTION1 = f"""
 SELECT c.id, c.name, c.email
 FROM customers c
 WHERE NOT EXISTS (
@@ -24,7 +24,7 @@ WHERE NOT EXISTS (
   WHERE o.customer_id = c.id AND o.total > 100
 );"""
 
-QUERY_SOL2 = f"""
+QUERY_SOLUTION2 = f"""
 SELECT c.id, c.name, c.email
 FROM customers c
 LEFT JOIN orders o ON c.id = o.customer_id AND o.total > 100
@@ -49,9 +49,9 @@ CREATE TABLE customers (
 
 ADD_EXAMPLE_QUERY = f"""
 INSERT INTO customers VALUES
-  (1, 'TrongTran', 'trantrong810@gmail.com'),
-  (2, 'Jane Smith', 'jane@example.com'),
-  (3, 'Bob Johnson', 'bob@example.com');
+  (1, 'Trong Tran', 'trantrong810@gmail.com'),
+  (2, 'Vu Xuan Phong', 'vuxuanphong@samsung.com'),
+  (3, 'Anonimous', 'anonimous@meta-vi.vn');
 
 INSERT INTO orders VALUES
   (101, 1, '2023-01-01', 50.00),
@@ -59,14 +59,6 @@ INSERT INTO orders VALUES
   (103, 2, '2023-03-20', 90.00),
   (104, 3, '2023-04-05', 80.00),
   (105, 3, '2023-05-10', 110.00);
-"""
-
-"""
-Problem: Give 2 table
-+ customers: id, name, email
-+ orders: id, customer_id, order_date, total.
-- Task: retrieve a list of customers who have placed at least one order but have never placed an order totaling more than $100.
---------------------
 """
 
 # Function to execute a query
@@ -100,15 +92,20 @@ with open(absolute_db_path, 'w'):
 conn, cursor = execute_query_script(CREATE_TABLE_QUERY)
 execute_query_script(ADD_EXAMPLE_QUERY)
 
+print("List of customers who have placed at least one order but have never placed an order totaling more than $100: \n")
 # Execute the first solution query
-conn, cursor = execute_query(QUERY_SOL1)
+conn, cursor = execute_query(QUERY_SOLUTION1)
 print("Solution 1:")
 print_query_result(cursor)
 
 # Execute the second solution query
-conn, cursor = execute_query(QUERY_SOL2)
+conn, cursor = execute_query(QUERY_SOLUTION2)
 print("\nSolution 2:")
 print_query_result(cursor)
 
 # Close the connection
 conn.close()
+
+# Remove the example db file
+if os.path.exists(absolute_db_path):
+    os.remove(absolute_db_path)
