@@ -4,6 +4,7 @@ import { CloudArrowUpIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
 import { toast, TypeOptions as ToastTypeOptions } from "react-toastify";
+import { error } from "console";
 
 const NUMB_OF_TOP_WORDS = 3;
 
@@ -67,10 +68,22 @@ const FileInfo = () => {
         notify("Starting to checking file...", "success");
     };
 
-    function fileDetailComponent() {
+    // Based on fileDetail to render UI
+    function fileDetailComponent(_fileDetail: FileCountedDetail | null) {
+        console.log("fileDetail, ", _fileDetail);
+        const errorMess = _fileDetail?.fileCountedDetail.errorMessage;
+        console.log("erorr Mess, ", errorMess);
+        if (errorMess !== null) {
+            return (
+                <div className="flex flex-col items-start justify-between p-24 w-[600px] h-[356px] text-red-600">
+                    {errorMess}
+                </div>
+            );
+        }
+        // Check error
         const topWords: Array<WordDetail> =
-            fileDetail?.fileCountedDetail?.topWords || [];
-        if (topWords.length === 0) {
+            _fileDetail?.fileCountedDetail?.topWords || [];
+        if (topWords.length < 1) {
             for (let i = 0; i < NUMB_OF_TOP_WORDS; i++) {
                 topWords.push({
                     word: "",
@@ -79,11 +92,11 @@ const FileInfo = () => {
             }
         }
         return (
-            <div className="flex flex-col items-start justify-between p-24 w-full">
+            <div className="flex flex-col items-start justify-between p-24 w-[600px] h-[356px]">
                 <div className="flex gap-2 mt-2 w-64 my-3">
                     <span className="w-full">Different words:</span>
                     <span className="w-32 text-end font-bold">
-                        {fileDetail?.fileCountedDetail.diffWords}
+                        {_fileDetail?.fileCountedDetail.diffWords}
                     </span>
                 </div>
                 <div>Top words:</div>
@@ -113,7 +126,6 @@ const FileInfo = () => {
                 }
                 setFileDetail(_fileDetail);
                 console.log("fileDetail: ", _fileDetail);
-                notify("Calculate done", "info");
                 setPreventChecking(true);
             };
         }
@@ -150,6 +162,10 @@ const FileInfo = () => {
                 "border-4": true,
                 "transition-colors": true,
             })}
+            style={{
+                minWidth: "700px",
+                width: "auto !important",
+            }}
         >
             <div className="w-full text-6xl text-center my-20">
                 Word Counter
@@ -181,6 +197,7 @@ const FileInfo = () => {
                     preventDefaultHandler(e);
                     const file = e.dataTransfer.files[0];
                     setFile(file);
+                    setFileDetail(null);
                     setShouldHighlight(false);
                     // Do logic businesses
                     onDropAFile(file);
@@ -222,7 +239,7 @@ const FileInfo = () => {
                     )}
                 </div>
             </div>
-            {fileDetailComponent()}
+            {fileDetailComponent(fileDetail)}
         </div>
     );
 };

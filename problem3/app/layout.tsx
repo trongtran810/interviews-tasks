@@ -18,7 +18,13 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            <body className={inter.className}>
+            <body
+                className={inter.className}
+                style={{
+                    minWidth: "700px",
+                    width: "auto !important",
+                }}
+            >
                 {children}
                 <ToastContainer />
             </body>

@@ -71,6 +71,10 @@ const wordCounter = (_text: string | null): FileCountedDetail => {
     }
     // Count the number of distinct words
     const words = _text.split(WORD_SEPARATORS);
+    // lowercase all words
+    for (let i = 0; i < words.length; i++) {
+        words[i] = words[i].toLowerCase();
+    }
     // Count the most repeated words
     result.fileCountedDetail = countWords(words);
     return result;
