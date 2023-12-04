@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Scores</title>
+</head>
+<body>
+    <h1>User Scores</h1>
+    <ul>
+        {% for entry in scores %}
+            <li>{{ entry.user.username }} - {{ entry.score }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
